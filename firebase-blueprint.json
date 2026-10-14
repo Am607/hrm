@@ -1,0 +1,130 @@
+{
+  "entities": {
+    "Department": {
+      "title": "Department",
+      "description": "Company department grouping staff members",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier" },
+        "name": { "type": "string", "maxLength": 100, "description": "Department name" },
+        "description": { "type": "string", "maxLength": 500, "description": "Department description" },
+        "headStaffId": { "type": "string", "description": "Staff ID of department head" },
+        "headStaffName": { "type": "string", "maxLength": 100, "description": "Name of department head" },
+        "createdAt": { "type": "string", "description": "Timestamp ISO string" },
+        "updatedAt": { "type": "string", "description": "Timestamp ISO string" }
+      },
+      "required": ["name", "createdAt"]
+    },
+    "Staff": {
+      "title": "Staff",
+      "description": "Employee record in the HRM system",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Staff identifier" },
+        "name": { "type": "string", "maxLength": 100, "description": "Full name" },
+        "email": { "type": "string", "maxLength": 150, "description": "Company or personal email" },
+        "phone": { "type": "string", "maxLength": 30, "description": "Contact phone number" },
+        "role": { "type": "string", "maxLength": 100, "description": "Job title or position" },
+        "departmentId": { "type": "string", "description": "Assigned department ID" },
+        "departmentName": { "type": "string", "maxLength": 100, "description": "Assigned department name" },
+        "joinDate": { "type": "string", "description": "Employment start date" },
+        "status": { "type": "string", "enum": ["active", "on_leave", "terminated"], "description": "Employment status" },
+        "baseSalary": { "type": "number", "description": "Monthly base salary" },
+        "emergencyContact": { "type": "string", "maxLength": 200, "description": "Emergency contact name and phone" },
+        "notes": { "type": "string", "maxLength": 1000, "description": "Staff notes" },
+        "avatarUrl": { "type": "string", "description": "Avatar photo URL" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "description": "Update timestamp" }
+      },
+      "required": ["name", "email", "role", "departmentId", "joinDate", "baseSalary", "status", "createdAt"]
+    },
+    "Attendance": {
+      "title": "Attendance",
+      "description": "Daily employee attendance record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Attendance record ID" },
+        "staffId": { "type": "string", "description": "Staff ID" },
+        "staffName": { "type": "string", "maxLength": 100, "description": "Staff name" },
+        "departmentId": { "type": "string", "description": "Department ID" },
+        "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "Date YYYY-MM-DD" },
+        "checkInTime": { "type": "string", "maxLength": 20, "description": "Check in time formatted" },
+        "checkOutTime": { "type": "string", "maxLength": 20, "description": "Check out time formatted" },
+        "status": { "type": "string", "enum": ["present", "absent", "late", "half_day"], "description": "Attendance status" },
+        "workHours": { "type": "number", "description": "Total recorded work hours" },
+        "notes": { "type": "string", "maxLength": 300, "description": "Attendance notes" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "description": "Update timestamp" }
+      },
+      "required": ["staffId", "staffName", "date", "status", "createdAt"]
+    },
+    "Leave": {
+      "title": "Leave",
+      "description": "Employee leave request record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Leave request ID" },
+        "staffId": { "type": "string", "description": "Staff ID" },
+        "staffName": { "type": "string", "maxLength": 100, "description": "Staff name" },
+        "leaveType": { "type": "string", "enum": ["annual", "sick", "casual", "unpaid"], "description": "Type of leave" },
+        "startDate": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "Leave start date" },
+        "endDate": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "Leave end date" },
+        "days": { "type": "number", "description": "Total days requested" },
+        "reason": { "type": "string", "maxLength": 500, "description": "Reason for leave" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"], "description": "Approval status" },
+        "appliedAt": { "type": "string", "description": "Application timestamp" },
+        "reviewedBy": { "type": "string", "maxLength": 100, "description": "Manager or HR name who reviewed" },
+        "reviewedAt": { "type": "string", "description": "Review timestamp" },
+        "reviewNotes": { "type": "string", "maxLength": 300, "description": "Notes from reviewer" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "description": "Update timestamp" }
+      },
+      "required": ["staffId", "staffName", "leaveType", "startDate", "endDate", "days", "status", "createdAt"]
+    },
+    "Salary": {
+      "title": "Salary",
+      "description": "Monthly employee payroll / salary slip record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Salary record ID" },
+        "staffId": { "type": "string", "description": "Staff ID" },
+        "staffName": { "type": "string", "maxLength": 100, "description": "Staff full name" },
+        "departmentName": { "type": "string", "maxLength": 100, "description": "Department name" },
+        "month": { "type": "string", "maxLength": 20, "description": "Salary pay period, e.g. 2026-10" },
+        "baseSalary": { "type": "number", "description": "Base salary amount" },
+        "allowances": { "type": "number", "description": "Additional allowances / bonuses" },
+        "deductions": { "type": "number", "description": "Deductions (tax, unpaid leaves, insurance)" },
+        "netSalary": { "type": "number", "description": "Final calculated net payout" },
+        "paymentStatus": { "type": "string", "enum": ["pending", "paid"], "description": "Disbursement status" },
+        "paymentDate": { "type": "string", "description": "Date payment was settled" },
+        "paymentMethod": { "type": "string", "maxLength": 50, "description": "Bank Transfer, Cheque, Cash, Direct Deposit" },
+        "notes": { "type": "string", "maxLength": 500, "description": "Payroll remarks or deductions breakdown" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "description": "Update timestamp" }
+      },
+      "required": ["staffId", "staffName", "month", "baseSalary", "netSalary", "paymentStatus", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/departments/{departmentId}": {
+      "schema": { "$ref": "#/entities/Department" },
+      "description": "Company departments"
+    },
+    "/staff/{staffId}": {
+      "schema": { "$ref": "#/entities/Staff" },
+      "description": "Company staff and employee profiles"
+    },
+    "/attendance/{attendanceId}": {
+      "schema": { "$ref": "#/entities/Attendance" },
+      "description": "Staff daily attendance tracking"
+    },
+    "/leaves/{leaveId}": {
+      "schema": { "$ref": "#/entities/Leave" },
+      "description": "Employee leave requests and approvals"
+    },
+    "/salaries/{salaryId}": {
+      "schema": { "$ref": "#/entities/Salary" },
+      "description": "Monthly payroll records and salary slips"
+    }
+  }
+}

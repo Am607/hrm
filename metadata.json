@@ -1,0 +1,8 @@
+{
+  "name": "StaffSync HRM",
+  "description": "Simple, streamlined human resource management for staff, attendance, leave tracking, payroll, and company analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

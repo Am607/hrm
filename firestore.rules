@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'akbarcp607@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Departments collection
+    match /departments/{departmentId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isValidId(departmentId);
+    }
+
+    // Staff collection
+    match /staff/{staffId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isValidId(staffId);
+    }
+
+    // Attendance collection
+    match /attendance/{attendanceId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isValidId(attendanceId);
+    }
+
+    // Leave requests collection
+    match /leaves/{leaveId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isValidId(leaveId);
+    }
+
+    // Salary / Payroll records collection
+    match /salaries/{salaryId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isValidId(salaryId);
+    }
+
+    // Admins collection for role-based storage
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin() && isValidId(adminId);
+    }
+
+    // Connection test document
+    match /test/connection {
+      allow read, write: if isSignedIn();
+    }
+  }
+}
